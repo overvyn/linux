@@ -1,0 +1,24 @@
+
+-Boot
+-manjaro / manjaro
+-config wifi: nmtui
+-setup
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#VSCODE
+
+-keyring error:
+sudo pacman -S gnome-keyring libsecret
