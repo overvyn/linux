@@ -5,14 +5,38 @@
 -setup
 
 
+-Partitions
+-Automatic UEFI GPT
+ 512M UEFI
+ rest /
+ swapfile 16G
+-Mount Partitions
+sda2 /
+swapfile 16G
+sda1 /boot
 
+-Pacman Repo
+https,http
 
+-Rank Pacman Repos
+10
 
+-Install Desktop bspwm
+yay base-devel + kernel57
 
+-FSTAB 
+-HOSTNAME
+-KEYBOARD
+-TIMEZONE
+-LANGUAGE
 
+-TWEAKS
 
+DONE
 
-
+### NEXT ###
+sudo pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
+systemctl enable lightdm
 
 
 #Spotify
@@ -22,6 +46,29 @@ makepkg -sri
 curl -sS https://download.spotify.com/debian/pubkey.gpg| gpg --import
 
 #VSCODE
-
 -keyring error:
 sudo pacman -S gnome-keyring libsecret
+
+
+
+
+
+
+yay -S teams
+yay -S google-chrome
+
+sudo pacman -S thunar
+sudo pacman -S mesa-demos
+sudo pacman -S xfce4-terminal
+
+sudo pacman -S snapd
+sudo systemctl enable --now snapd.socket
+
+sudo pacman -S mlocate
+sudo pacman -S lib32-libx11
+sudo pacman -S libcanberra-gstreamer
+sudo pacman -S bash-completion
+sudo pacman -S pamac
+  
+  
+  
