@@ -1,0 +1,288 @@
+Step 1: Download the Arch Linux ISO
+***********************************
+HTTP
+http://mirrors.evowise.com/archlinux/iso/2020.08.01/
+Torrent
+magnet:?xt=urn:btih:49da7ae0de8874462471d0f5419b850e599b05ef&dn=archlinux-2020.08.01-x86_64.iso
+
+Step 2: Create a live USB of Arch Linux
+***************************************
+Use balenaEtcher GUI
+
+or use command line
+
+dd bs=4M if=/path/to/archlinux.iso of=/dev/sdx status=progress && sync
+
+Partition the disks
+*******************
+cfdisk /dev/sdb
+
+sdb1 /boot 300M EFI
+sdb2 swap  8G
+sdb3 /     100G ext4
+
+mkfs.vfat -F 32 /dev/sdb1
+mkswap /dev/sdb2
+mkfs.ext4 /dev/sdb3
+
+swapon /dev/sdb2
+mount /dev/sdb3 /mnt 
+mkdir -p /mnt/boot/efi
+mount /dev/sdb1 /mnt/boot/efi
+
+Step 3: Install Base System
+***************************
+pacman -Syy
+pacman -S reflector
+reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
+pacstrap /mnt base base-devel linux linux-firmware
+
+
+Configure the installed Arch system
+***********************************
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+
+Setting Locale and timezone
+***************************
+ls /usr/share/kbd/keymaps/**/*.map.gz
+loadkeys la-latin1
+timedatectl set-ntp true
+timedatectl set-timezone America/Argentina/Buenos_Aires
+ln -sf /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime
+hwclock --systohc
+
+#Edit locale-gen en_US.UTF-8
+#Run locale-gen
+#Add en_US.UTF-8 to /etc/locale.conf
+export LANG=en_US.UTF-8
+
+#Edit /etc/vconsole.conf
+KEYMAP=la-latin1
+...
+Por conveniencia, localectl puede utilizarse para configurar el mapa de teclas de la consola. 
+Cambiará la variable KEYMAP en /etc/vconsole.conf y también establecerá el mapa de teclas para la sesión actual:
+### $ localectl set-keymap --no-convert mapa_de_teclado ###
+
+$ localectl set-keymap --no-convert la-latin1
+
+Network Configuration
+*********************
+echo HOSTNAME > /etc/hostname
+
+#touch /etc/hosts
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	myarch
+
+Password Root
+*************
+#Change root passwd
+passwd root
+
+Add new User
+************
+uuseradd -m -s /bin/bash lpb
+usermod -aG wheel lpb
+
+
+Step 4: Install Grub bootloader
+******************************
+#BootManager
+sudo pacman -S grub
+
+#EFI Check - If return files is efi.
+ls /sys/firmwarfe/efi/*
+
+UEFI
+sudo pacman -S efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+
+Step 5: Install a desktop environment (AWESOME in this case)
+**********************************************************
+pacman -S xorg xorg-xinit
+pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
+pacman -S awesome
+pacman -S archlinux-xdg-menu
+
+systemctl enable lightdm
+systemctl enable NetworkManager.service
+
+### Configure Awesome ###
+
+mkdir -p ~/.config/awesome
+cp /etc/xdg/awesome/rc.lua ~/.config/awesome/
+cp /usr/share/awesome/themes/gtk/theme.lua ~/.config/awesome/
+
+## With xdg_menu ###
+https://wiki.archlinux.org/index.php/Xdg-menu#Installation
+$ xdg_menu --format awesome --root-menu /etc/xdg/menus/arch-applications.menu >~/.config/awesome/archmenu.lua
+
+Then edit your rc.lua as shown below
+
+Add a require statment for your new menu.lua file
+Add an entry to your awful.menu object for your new menu which calls xdgmenu
+...
+xdg_menu = require("archmenu")
+...
+
+...
+mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
+                                    { "Applications", xdgmenu },
+                                    { "open terminal", terminal }
+                                  }
+                        })
+...
+
+
+## autostart compton or any other app awesome ###
+
+#rc.lua botton
+do
+  local cmds =
+  {
+    "compton -b",
+    "firefox"
+  }
+
+  for _,i in pairs(cmds) do
+    awful.util.spawn(i)
+  end
+end
+
+
+Last Step: 
+*********
+#exit
+#Reboot
+
+#Day2
+
+sudo pacman -Syyu
+sudo pacman -S xorg xorg-xinit xorg-xrandr neofetch bash-completion
+#VIDEO NVIDIA
+sudo pacman -S nvidia nvidia-settings nvidia-utils opencl-nvidia
+#VIDEO NVIDIA KERNEL LTS
+sudo pacman -S nvidia-lts nvidia-utils nvidia-settings opencl-nvidia
+
+sudo nvidia-smi
+sudo nvidia-smi -q -d TEMPERATURE
+sudo glxinfo | grep direct
+
+sudo pacman -S xterm alsa alsa-utls alsa-lib alsa=plugins pulseaudio 
+sudo pacman -S git make gcc perl htop bashtop xcape feh xdg-user-dirs thunar rofi
+sudo pacman -S remmina qbittorrent obs-studio code vlc amarok conky libsecret gnome-keyring
+
+yay -S pamac
+yay -Syyu
+yay -S teams
+yay -S mailspring
+yay -S inxi
+
+#CODECS
+sudo pacman -S a52dec faac faad2 flac jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer
+
+#Archive maangers
+sudo pacman -S p7zip unrar tar rsync
+
+
+
+#############
+### BSPWM ###
+#############
+sudo pacman -S bspwm sxhkd tilix firefox network-manager-applet alacritty geany gimp gedit termite screenkey
+yay -S compton-tryone-git
+
+cp /usr/share/doc/bspwm/bspwmrc /home/lpb/.config/bspwm/bspwmrc
+cp /usr/share/doc/sxhkd/sxhkdrc /home/lpb/.config/sxhkd/sxhkdrc
+chmod +x /home/lpb/.config/bspwm/bspwmrc
+chmod +x /home/lpb/.config/sxhkd/sxhkdrc
+
+yay -S polybar
+
+cp /usr/share/doc/polybar/config /home/lpb/.config/polybar/config
+
+nano /home/lpb/.config/polybar/launch
+
+#!/bin/sh
+
+# Terminate already running bar instances
+polybar-msg cmd quit
+
+# Auto detect hardware
+export WLAN="$(ls /sys/class/net | grep wlp)"
+export ETHERNET="$(ls /sys/class/net | grep enp)"
+export THERMAL="$(grep -Rl "x86_pkg_temp" /sys/class/thermal/thermal_zone*/type | tr -d -c 0-9)"
+
+# Launch Polybar, using default config location ~/.config/polybar/config
+for m in $(polybar --list-monitors | cut -d":" -f1); do
+    MONITOR=$m polybar --reload topbar &
+done
+
+
+
+###########
+### AUR ###
+###########
+sudo git clone https://aur.archlinux.org/yay-git.git
+sudo chown -R tecmint:tecmint ./yay-git
+cd yay-git 
+makepkg -si
+
+How to Use Yay in Arch Linux and Manjaro
+----------------------------------------
+Once you have yay installed, you can upgrade all the packages on your system using the command.
+
+$ sudo yay -Syu
+
+To include development packages during the upgrade run.
+
+$ yay -Syu --devel --timeupdate
+
+As with any other AUR helpers, you can install the packages using the command.
+
+$ sudo yay -S gparted
+
+To remove a package using yay use the command.
+
+$ sudo yay -Rns package_name
+
+To clean up all unwanted dependencies on your system, issue the command.
+
+$ sudo yay -Yc
+
+If you want to print system statistics using yay, run.
+
+$ sudo yay -Ps
+
+
+#### VPN ####
+
+yay -S lib32-libstdc++5
+yay -S package-query
+yourt -S lib32-pam
+
+o 
+
+Habilitar multilib en pacman.conf
+sudo pacman -S lib32-libstdc++5sudo 
+sudo pacman -S lib32-pam
+pacman -S lib32-libx11
+
+
+#### Bluetooth ####
+sudo pacman  -S pulseaudio-bluetooth
+pulseaudio -k
+pulseaudio --start
+
+sudo pacman -S bluez bluez-utils
+
+bluetoothctl
+power on
+scan on
+pair XXXXXXX
+conneect XXXXX
+
+

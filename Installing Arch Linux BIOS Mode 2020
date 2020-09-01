@@ -1,0 +1,111 @@
+Step 1: Download the Arch Linux ISO
+***********************************
+HTTP
+http://mirrors.evowise.com/archlinux/iso/2020.08.01/
+Torrent
+magnet:?xt=urn:btih:49da7ae0de8874462471d0f5419b850e599b05ef&dn=archlinux-2020.08.01-x86_64.iso
+
+Step 2: Create a live USB of Arch Linux
+***************************************
+Use balenaEtcher GUI
+
+or use command line
+
+# sdx , is the usb device detected
+dd bs=4M if=/path/to/archlinux.iso of=/dev/sdx status=progress && sync
+
+Partition the disks
+*******************
+cfdisk /dev/sda
+
+sda1 swap  2G
+sda2 /     8G ext4
+
+mkswap /dev/sda1
+mkfs.ext4 /dev/sda2
+
+swapon /dev/sda1
+mount /dev/sda2 /mnt 
+
+
+Step 3: Install Base System
+***************************
+pacman -Syy
+pacman -S reflector
+reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
+pacstrap /mnt base base-devel linux linux-firmware
+
+
+Configure the installed Arch system
+***********************************
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+
+Setting Locale and timezone
+***************************
+ls /usr/share/kbd/keymaps/**/*.map.gz
+loadkeys la-latin1
+timedatectl set-ntp true
+timedatectl set-timezone America/Argentina/Buenos_Aires
+ln -sf /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime
+hwclock --systohc
+
+#Edit locale-gen en_US.UTF-8
+#Run locale-gen
+#Add en_US.UTF-8 to /etc/locale.conf
+export LANG=en_US.UTF-8
+
+#Edit /etc/vconsole.conf
+KEYMAP=la-latin1
+...
+Por conveniencia, localectl puede utilizarse para configurar el mapa de teclas de la consola. 
+Cambiará la variable KEYMAP en /etc/vconsole.conf y también establecerá el mapa de teclas para la sesión actual:
+### $ localectl set-keymap --no-convert mapa_de_teclado ###
+
+$ localectl set-keymap --no-convert la-latin1
+
+Network Configuration
+*********************
+echo HOSTNAME > /etc/hostname
+
+#touch /etc/hosts
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	myarch
+
+Password Root
+*************
+#Change root passwd
+passwd root
+
+Add new User
+************
+uuseradd -m -s /bin/bash lpb
+usermod -aG wheel lpb
+
+
+Step 4: Install Grub bootloader
+******************************
+#BootManager
+sudo pacman -S grub
+
+grub-install --target=i386-pc /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+
+Step 5: Install a desktop environment (GNOME in this case)
+**********************************************************
+pacman -S xorg
+pacman -S gnome
+
+systemctl start gdm.service
+systemctl enable gdm.service
+systemctl enable NetworkManager.service
+
+
+
+Last Step: 
+*********
+#exit
+#Reboot
+
+Done.

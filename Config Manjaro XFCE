@@ -1,0 +1,131 @@
+############################
+### Config Manjaro XFCE ####
+############################
+
+-Install
+-Update
+-Drivers NVIDIA
+https://wiki.manjaro.org/index.php?title=Configure_NVIDIA_(non-free)_settings_and_load_them_on_Startup
+inxi -G
+sudo mhwd -a pci nonfree 0300
+mhwd -li
+
+NUEVO KERNEL
+sudo mhwd-kernel -i linux57
+
+
+### VPN CheckPoint ###
+pacman -S lib32-pam
+pacman -S yay
+yay -S lib32-libstdc++5
+
+# Para conectarse
+snx -u DOMAIN_USER -s connectra.fibertel.com.ar -g
+# Para desconectarse
+snx -d
+
+
+
+### SNAP ###
+sudo snap install prospect-mail
+sudo snap install telegram-desktop
+sudo snap install spotify
+sudo snap install code --classic
+sudo snap install wormhole
+
+### OTROS ###
+yay -S teams
+sudo pacman -S xfce4-netload-pluginnet
+sudo pacman -S neofetch
+sudo pacman -S neovim
+sudo pacman -S make gcc perl
+sudo pacman -S linux57-headers
+sudo pacman -S xorg-server-xephyr
+
+### Genymotion install ###
+
+Previo
+-Virtualbox 6.0.24
+
+    From the following link : https://download.virtualbox.org/virtualbox/6.0.24
+
+    VirtualBox-6.0.24-xxxx-Linux_amd64.run
+    Oracle_VM_VirtualBox_Extension_Pack-6.0.24.vbox-extpack
+    VBoxGuestAdditions_6.0.24.iso
+
+    Run chmod +x VirtualBox-6.0.24-xxxxx-Linux_amd64.run, then run the file sudo ./VirtualBox-6.0.24-xxxx-Linux_amd64.run.
+    Install gcc, perl, make.
+    Install linux-headers package, for me it was named linux55-headers.
+    Run sudo '/sbin/vboxconfig'.
+    Open Virtualbox then install Extension Pack.
+
+
+https://github.com/m9rco/Genymotion_ARM_Translation
+Drag and Drop
+
+or 
+ 1. adb shell
+  2. cd /sdcard/Download/
+  3. sh /system/bin/flash-archive.sh /sdcard/Download/Genymotion-ARM-Translation.zip
+  4. adb reboot
+
+Google Play Store
+drag and drop
+open_gapps-x86-8.0-nano-20200630.zip
+
+
+https://apps.evozi.com/apk-downloader/?id=com.lilithgame.sgame.gp.oss
+
+
+
+
+### Github ###
+Step 1 : Install git on your system
+
+Step 2 : Create account on github - https://github.com/
+
+Step 3 : Create a repository on github & copy url
+
+Step 4 : Goto VS Code and open project/folder
+
+note : check git is enabled from settings
+
+Step 5 : Goto source control section & click on git icon
+
+Step 6 : Give commit message & Commit the changes
+
+Step 7 : Add remote repo (github repo)
+
+Step 8 : Push commited changes to github repo
+
+Step 9 : Check changes on github repo
+
+
+### Compiz ###
+The steps to install he mentions are:
+
+sudo pacman -S libappindicator-gtk3
+
+pamac build compiz-gtk
+
+pamac build compiz-bcop
+
+pamac build libcompizconfig
+
+pamac build compizconfig-python
+
+pamac build ccsm
+
+pamac build compiz-fusion-plugins-main
+
+pamac build compiz-fusion-plugins-extra
+
+pamac build compiz-fusion-plugins-experimental
+
+pamac build emerald
+
+pamac build emerald-themes
+
+pamac build fusion-icon
+
+libtool --finish /usr/lib/compiz
