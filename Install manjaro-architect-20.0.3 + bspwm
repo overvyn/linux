@@ -15,8 +15,11 @@
 
 
 
-
-
+#Spotify
+Git clone https://aur.archlinux.org/spotify.git
+cd spotify
+makepkg -sri
+curl -sS https://download.spotify.com/debian/pubkey.gpg| gpg --import
 
 #VSCODE
 
