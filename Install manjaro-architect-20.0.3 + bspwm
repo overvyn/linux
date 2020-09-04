@@ -103,6 +103,7 @@ makepkg -sri
 curl -sS https://download.spotify.com/debian/pubkey.gpg| gpg --import
 
 #VS CODE
+sudo pacman -S code
 -keyring error:
 sudo pacman -S gnome-keyring libsecret
 
