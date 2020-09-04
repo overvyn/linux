@@ -112,6 +112,7 @@ yay -S teams
 #Google Chrome
 yay -S google-chrome
 
+# Otros
 sudo pacman -S thunar mesa-demos xfce4-terminal mlocate bash-completion pamac
 
 #Snap
