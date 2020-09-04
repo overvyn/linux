@@ -35,7 +35,25 @@ $setup
     # Ejecutamos la opcion y salimos sin pasar por las opciones 11 y 12.
 
 2. Install Desktop systemctl
-yay base-devel + kernel57
+    
+    1. Install Manjaro Desktop
+    # Elegimos 
+    - yay base-devel + kernel57 
+    - bspwm
+    #Luego clic en "yes" en Additional Packages
+    #y buscamos lightdm, con TAB elegimos los siguientes y luego ENTER:
+    lightdm
+    lightdm-settings
+    lightdm-gtk-greeter
+    lightdm-slick-greeter
+    lightdm-gtk-greeter-settings
+
+    # Nos pregunta edition full o minima
+    # Elegimos minima
+    # Cuando mustra el listado de paaquetes , ejecutar CTRL+x y N para seguir
+    # Comienza la instalacion
+
+    
 
 -FSTAB 
 -HOSTNAME
