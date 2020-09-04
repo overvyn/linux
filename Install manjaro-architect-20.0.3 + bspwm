@@ -53,53 +53,75 @@ $setup
     # Cuando mustra el listado de paaquetes , ejecutar CTRL+x y N para seguir
     # Comienza la instalacion
 
-    
+    # Install DISPLAY DRIVERS
+    # Elegimos Autoinstall FREE-DRIVERS
 
--FSTAB 
--HOSTNAME
--KEYBOARD
--TIMEZONE
--LANGUAGE
+    2. Install BOOTLOADER
+    # Elegimos grub y lo instalamos en /dev/sda
 
--TWEAKS
+    3. Configure base
 
-DONE
+        1. Generate FSTAB
+        # Elegimos por DEVICE UUID
+        2. Set HOSTNAME
+        # Seteamos un nombre al equipo
+        3. Set System Locale
+        # Dejamos en_US.UTF-8
+        4. Set Desktop Keyboard Layout
+        # Elegimos "us"
+        5. Set Timezone y Clock
+        # Elijo America/Argentina/Buenos_Aires , UTC
+        6. Set ROOT Password
+        # Elegimos la pass de ROOT
+        7. Add New Users    
+        # Creamos un usuario nuevo y seteamos su pass
 
-### NEXT ###
-sudo pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
-systemctl enable lightdm
+    4. System TWEAKS
+        
+        3. Performance
+            3. Swap Configuration
+            #Descomentar dirty_ratio
+            4. Preload
+            # Ejecutar precarga
+        4. Security and Systemd Tweaks
+            1. Amend Journald logging
+            # Setear en 50M
+            2. Disable Coredump Logging
+            # Deshabilitar coredumps
+    DONE
+
+    -Reboot
 
 
+
+
+Opcional - Otros programas
 #Spotify
 Git clone https://aur.archlinux.org/spotify.git
 cd spotify
 makepkg -sri
 curl -sS https://download.spotify.com/debian/pubkey.gpg| gpg --import
 
-#VSCODE
+#VS CODE
 -keyring error:
 sudo pacman -S gnome-keyring libsecret
 
-
-
-
-
-
+#Teams
 yay -S teams
+
+#Google Chrome
 yay -S google-chrome
 
-sudo pacman -S thunar
-sudo pacman -S mesa-demos
-sudo pacman -S xfce4-terminal
+sudo pacman -S thunar mesa-demos xfce4-terminal mlocate bash-completion pamac
 
+#Snap
 sudo pacman -S snapd
 sudo systemctl enable --now snapd.socket
 
-sudo pacman -S mlocate
-sudo pacman -S lib32-libx11
-sudo pacman -S libcanberra-gstreamer
-sudo pacman -S bash-completion
-sudo pacman -S pamac
-  
+#VPN
+sudo pacman -S lib32-libx11 lib32-pam lib32-libstdc++5
+
+
+
   
   
