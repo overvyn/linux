@@ -1,27 +1,40 @@
+Nu
 
--Boot
--manjaro / manjaro
--config wifi: nmtui
--setup
+-Boot ISO Manjaro Architect 20.0.3
+Acceso: manjaro / manjaro
+## Verificar Red: nmtui ##
 
+## Lanzar instalacion ##
+$setup
 
--Partitions
--Automatic UEFI GPT
- 512M UEFI
- rest /
- swapfile 16G
--Mount Partitions
-sda2 /
-swapfile 16G
-sda1 /boot
+# Clic en Prepare installation y elegimos solo el numero de opciones a continuacion:
+1. Prepare Installation
+    1. Set virtual Console
+    # Elegimos la-latin1
+    3. Partition Disk
+    # Elegimos Automatic Partitioning 
+    Quedara asi (Ej.con un disco de 20G):
+        sda1    512M
+        sda2    19.5G
+    8. Mount Partitions
+    # Elegimos sda2 para ROOT Partition, y formateamos como ext4
+    # Elegimos SwapFile por default tamaño de la RAM (ej. 2G)
+    # Elegimos sda1 y montamos en /boot, formateamos como vfat F32.
+    Queda asi:
+    sda1    /boot   512M
+    sda2    /       19.5G
+    swapfile swap   2G
 
--Pacman Repo
-https,http
+    9. Configure installer Mirrorlist
+    # Elegimos opcion 2, Edit Pacman Mirror Configuration y editamos Protocols, descomentamos la linea y queda asi:
+    Protcols = https,http
+    # Elegimos luego Rank Mirrorlist
+    Esperammos que finalice y elegimos con la barra los primeros 10 mas rapidos repositorios. Luego OK
 
--Rank Pacman Repos
-10
+    10. Refresh Pacman Keys 
+    # Ejecutamos la opcion y salimos sin pasar por las opciones 11 y 12.
 
--Install Desktop bspwm
+2. Install Desktop systemctl
 yay base-devel + kernel57
 
 -FSTAB 
