@@ -16,10 +16,12 @@ dd bs=4M if=/path/to/archlinux.iso of=/dev/sdx status=progress && sync
 
 Partition the disks
 *******************
+sda 15G Example
+
 cfdisk /dev/sda
 
-sda1 swap  2G
-sda2 /     8G ext4
+sda1 swap  4G
+sda2 /     15G ext4
 
 mkswap /dev/sda1
 mkfs.ext4 /dev/sda2
@@ -33,7 +35,7 @@ Step 3: Install Base System
 pacman -Syy
 pacman -S reflector
 reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel linux linux-firmware
+pacstrap /mnt base base-devel linux linux-firmware nano vi vim neovim xterm alacritty networkmanager
 
 
 Configure the installed Arch system
@@ -71,7 +73,7 @@ echo HOSTNAME > /etc/hostname
 #touch /etc/hosts
 127.0.0.1	localhost
 ::1		localhost
-127.0.1.1	myarch
+
 
 Password Root
 *************
@@ -89,19 +91,58 @@ Step 4: Install Grub bootloader
 #BootManager
 sudo pacman -S grub
 
-grub-install --target=i386-pc /dev/sda
+grub-install /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 
-Step 5: Install a desktop environment (GNOME in this case)
+Step 5: Install a desktop environment (Awesome in this case)
 **********************************************************
-pacman -S xorg
-pacman -S gnome
+pacman -S xorg xorg-xinit
+pacman -S awesome lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
 
-systemctl start gdm.service
-systemctl enable gdm.service
-systemctl enable NetworkManager.service
+systemctl enable NetworkManager
+systemctl enable lightdm
+
+### Configure Awesome ###
+
+mkdir -p ~/.config/awesome
+cp /etc/xdg/awesome/rc.lua ~/.config/awesome/
+cp /usr/share/awesome/themes/gtk/theme.lua ~/.config/awesome/
+
+## With xdg_menu ###
+https://wiki.archlinux.org/index.php/Xdg-menu#Installation
+$ xdg_menu --format awesome --root-menu /etc/xdg/menus/arch-applications.menu >~/.config/awesome/archmenu.lua
+
+Then edit your rc.lua as shown below
+
+Add a require statment for your new menu.lua file
+Add an entry to your awful.menu object for your new menu which calls xdgmenu
+...
+xdg_menu = require("archmenu")
+...
+
+...
+mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
+                                    { "Applications", xdgmenu },
+                                    { "open terminal", terminal }
+                                  }
+                        })
+...
 
 
+## autostart compton or any other app awesome ###
+
+#rc.lua botton
+do
+  local cmds =
+  {
+    "compton -b",
+    "firefox"
+  }
+
+  for _,i in pairs(cmds) do
+    awful.util.spawn(i)
+  end
+end
 
 Last Step: 
 *********
