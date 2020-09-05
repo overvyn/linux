@@ -34,7 +34,7 @@ Step 3: Install Base System
 ***************************
 pacman -Syy
 pacman -S reflector
-reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
+reflector --verbose --country brazil --latest 15 --sort rate --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel linux linux-firmware nano vi vim neovim xterm alacritty networkmanager
 
 
