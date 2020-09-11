@@ -29,7 +29,7 @@ fi
 
 # INSTALL NODEJS Y NPM
 sudo pacman --noconfirm -Syy nodejs npm
-sudo pacman --noconfirm -Syy nodejs-express
+
 
 mkdir ~/.npm-global
 npm config set prefix '~/.npm-global'
