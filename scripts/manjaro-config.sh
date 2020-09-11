@@ -3,7 +3,7 @@
 # DEV PACKAGES
 
 #ZSH
-sudo pacman -Syy zsh
+sudo pacman -Syy zsh git curl
 
 #ZSH OH-MY-ZSH
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
