@@ -1,6 +1,6 @@
-
-
-# DEV PACKAGES
+################
+# DEV PACKAGES #
+################
 
 #ZSH
 sudo pacman -Syy zsh git curl
