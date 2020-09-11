@@ -2,6 +2,28 @@
 # DEV PACKAGES #
 ################
 
+if [ -f /usr/bin/curl ] 
+    then echo "curl ya esta instalado." 
+    else  
+    #INSTALL curl
+    sudo pacman --noconfirm -Syy curl
+fi
+
+if [ -f /usr/bin/git ] 
+    then echo "git ya esta instalado." 
+    else  
+    #INSTALL git
+    sudo pacman --noconfirm -Syy git
+fi
+
+if [ -f /usr/bin/zsh ] 
+    then echo "zsh ya esta instalado." 
+    else  
+    #INSTALL zsh
+    sudo pacman --noconfirm -Syy zsh
+fi
+
+
 if [ -d ~/.oh-my-zsh ] 
 then
     # THEMES
@@ -20,16 +42,25 @@ then
     sed -i '/^ZSH_THEME="robbyrussell"/c\ZSH_THEME="powerlevel10k/powerlevel10k"' ~/.zshrc
 
 else
-    #ZSH
-    sudo pacman --noconfirm -Syy zsh git curl
 
     #ZSH OH-MY-ZSH
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
-# INSTALL NODEJS Y NPM
-sudo pacman --noconfirm -Syy nodejs npm
 
+if [ -f /usr/bin/node ] 
+    then echo "nodejs ya esta instalado." 
+    else  
+    #INSTALL NODEJS
+    sudo pacman --noconfirm -Syy nodejs
+fi
+
+if [ -f /usr/bin/npm ] 
+    then echo "npm ya esta instalado." 
+    else  
+        #INSTALL NPM
+        sudo pacman --noconfirm -Syy npm
+fi
 
 mkdir ~/.npm-global
 npm config set prefix '~/.npm-global'
